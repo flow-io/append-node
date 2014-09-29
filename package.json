@@ -1,6 +1,6 @@
 {
   "name": "flow-append",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Transform stream which appends to each data string.",
   "author": {
     "name": "Athan Reines",
