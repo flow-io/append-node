@@ -97,8 +97,7 @@ fromArray( ['1','2','3','4'] )
 ## Examples
 
 ``` javascript
-var toString = require( 'flow-to-string' ),
-	fromArray = require( 'flow-from-array' ),
+var fromArray = require( 'flow-from-array' ),
 	append = require( 'flow-append' ).objectMode;
 
 // Create some data...
@@ -112,7 +111,6 @@ var readableStream = fromArray( data );
 
 // Pipe the data:
 readableStream
-	.pipe( toString() )
 	.pipe( append( '\n' ) )
 	.pipe( process.stdout );
 ```

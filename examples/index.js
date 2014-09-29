@@ -1,5 +1,4 @@
-var toString = require( 'flow-to-string' ),
-	fromArray = require( 'flow-from-array' ),
+var fromArray = require( 'flow-from-array' ),
 	append = require( './../lib' ).objectMode;
 
 // Create some data...
@@ -13,6 +12,5 @@ var readableStream = fromArray( data );
 
 // Pipe the data:
 readableStream
-	.pipe( toString() )
 	.pipe( append( '\n' ) )
 	.pipe( process.stdout );
