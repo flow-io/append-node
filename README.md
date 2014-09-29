@@ -26,11 +26,6 @@ var append = require( 'flow-append' );
 
 Returns a transform `stream` in which a `value` is appended to each streamed `chunk`. 
 
-A few notes:
-* 	the input (writable) stream __always__ operates in `objectMode`
-* 	
-* 	all other Transform `options` are honored: `encoding`, `highWaterMark`, `allowHalfOpen`, and `objectMode` (readable)
-
 To create a stream,
 
 ``` javascript
@@ -42,6 +37,7 @@ The default options are as follows:
 *	`encoding=null`
 *	`allowHalfOpen=true`
 * 	`objectMode=false`
+*	`decodeStrings=true`
 
 To set the `options` when creating a stream,
 
@@ -50,7 +46,8 @@ var opts = {
 		'encoding': 'utf8',
 		'highWaterMark': 8,
 		'allowHalfOpen': false,
-		'objectMode': true
+		'objectMode': true,
+		'decodeStrings': false
 	};
 
 stream = append( '\n', opts );
@@ -66,7 +63,8 @@ var opts = {
 		'encoding': 'utf8',
 		'highWaterMark': 8,
 		'allowHalfOpen': false,
-		'objectMode': true
+		'objectMode': true,
+		'decodeStrings': false
 	};
 
 var factory = append.factory( opts );
@@ -124,6 +122,31 @@ To run the example code from the top-level application directory,
 ``` bash
 $ node ./examples/index.js
 ```
+
+
+## Notes
+
+This stream is best used with binary or object streams where each datum is a character `string`. Internally, each datum is coerced to a `string` and the `value` appended. Such behavior may have undesired side-effects when used with non-string data. For example,
+
+``` javascript
+var obj = {
+	'beep': 'boop'	
+};
+
+console.log( obj.toString() );
+// returns '[object Object]'
+
+var arr = [1,2,3,4];
+
+console.log( arr.toString() );
+// returns '1,2,3,4'
+```
+
+If you want to append values to an `array`, you are probably best using some other means.
+
+If the value `undefined` is written to the stream, the stream emits an `error` event and closes.
+
+The primary use case is in delineating successive values; e.g., separating each value with a newline character or a comma. Undoubtedly, this stream can be used for other ends, but note that no guarantees can be made concerning behavior, as in the examples above.
 
 
 ## Tests
