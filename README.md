@@ -2,7 +2,7 @@ append
 ===
 [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Coverage Status][coveralls-image]][coveralls-url] [![Dependencies][dependencies-image]][dependencies-url]
 
-> Transform stream which appends each streamed datum.
+> [Transform stream](http://nodejs.org/api/stream.html#stream_class_stream_transform) which appends to each data string.
 
 
 ## Installation
@@ -16,16 +16,92 @@ For use in the browser, use [browserify](https://github.com/substack/node-browse
 
 ## Usage
 
+To use the module,
 
+``` javascript
+var append = require( 'flow-append' );
+```
+
+#### append( value[, options] )
+
+Returns a transform `stream` in which a `value` is appended to each streamed `chunk`. 
+
+A few notes:
+* 	the input (writable) stream __always__ operates in `objectMode`
+* 	
+* 	all other Transform `options` are honored: `encoding`, `highWaterMark`, `allowHalfOpen`, and `objectMode` (readable)
+
+To create a stream,
+
+``` javascript
+var stream = append( '\n' );
+```
+
+The default options are as follows:
+*	`highWaterMark=16`
+*	`encoding=null`
+*	`allowHalfOpen=true`
+* 	`objectMode=false`
+
+To set the `options` when creating a stream,
+
+``` javascript
+var opts = {
+		'encoding': 'utf8',
+		'highWaterMark': 8,
+		'allowHalfOpen': false,
+		'objectMode': true
+	};
+
+stream = append( '\n', opts );
+```
+
+
+#### append.factory( [options] )
+
+Returns a reusable stream factory. The factory method ensures streams are configured identically by using the same set of provided `options`.
+
+``` javascript
+var opts = {
+		'encoding': 'utf8',
+		'highWaterMark': 8,
+		'allowHalfOpen': false,
+		'objectMode': true
+	};
+
+var factory = append.factory( opts );
+
+var streams = new Array( 10 );
+
+// Create many streams configured identically but may each be independently written to...
+for ( var i = 0; i < streams.length; i++ ) {
+	streams[ i ] = factory();
+}
+```
+
+
+#### append.objectMode( [options] )
+
+This method is a convenience function to create transform streams which always operate in `objectMode`. The method will __always__ override the `objectMode` option in `options`.
+
+``` javascript
+var fromArray, append;
+
+fromArray = require( 'flow-from-array' ).objectMode;
+append = require( 'flow-append' ).objectMode;
+
+fromArray( ['1','2','3','4'] )
+	.pipe( append( '\n' ) )
+	.pipe( process.stdout );
+```
 
 
 ## Examples
 
 ``` javascript
 var toString = require( 'flow-to-string' ),
-	newline = require( 'flow-newline' ),
-	readArray = require( 'flow-read-array' ),
-	flowStream = require( 'flow-append' );
+	fromArray = require( 'flow-from-array' ),
+	append = require( 'flow-append' ).objectMode;
 
 // Create some data...
 var data = new Array( 1000 );
@@ -34,16 +110,12 @@ for ( var i = 0; i < data.length; i++ ) {
 }
 
 // Create a readable stream:
-var readStream = readArray( data );
-
-// Create a new flow stream:
-var stream = flowStream();
+var readableStream = fromArray( data );
 
 // Pipe the data:
-readStream
-	.pipe( stream )
+readableStream
 	.pipe( toString() )
-	.pipe( newline() )
+	.pipe( append( '\n' ) )
 	.pipe( process.stdout );
 ```
 

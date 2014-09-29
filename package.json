@@ -1,7 +1,7 @@
 {
   "name": "flow-append",
   "version": "0.0.0",
-  "description": "Transform stream which appends each streamed datum.",
+  "description": "Transform stream which appends to each data string.",
   "author": {
     "name": "Athan Reines",
     "email": "kgryte@gmail.com"
@@ -25,22 +25,27 @@
   "keywords": [
     "stream",
     "flow",
-    "flow.io"
+    "flow.io",
+    "append",
+    "transform",
+    "duplex"
   ],
   "bugs": {
     "url": "https://github.com/flow-io/append-node/issues"
   },
-  "dependencies": {},
+  "dependencies": {
+    "readable-stream": "^1.0.32",
+    "validate.io-object": "^1.0.0"
+  },
   "devDependencies": {
     "chai": "1.x.x",
-    "mocha": "1.x.x",
     "coveralls": "^2.11.1",
-    "istanbul": "^0.3.0",
-    "flow-read-array": "^1.0.0",
-    "flow-to-string": "^1.0.0",
-    "flow-newline": "^1.0.0",
+    "flow-from-array": "^1.1.3",
     "flow-mock-read": "^1.0.0",
-    "flow-mock-write": "^1.0.0"
+    "flow-mock-write": "^1.0.0",
+    "flow-to-string": "^1.1.0",
+    "istanbul": "^0.3.0",
+    "mocha": "1.x.x"
   },
   "licenses": [
     {
