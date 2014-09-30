@@ -34,6 +34,14 @@ describe( 'flow-append', function tests() {
 			expect( stream ).to.be.a( 'function' );
 		});
 
+		it( 'should throw an error if not provided a value to append', function test() {
+			expect( foo ).to.throw( Error );
+
+			function foo() {
+				stream();
+			}
+		});
+
 		it( 'should throw an error if provided a bad option', function test() {
 			expect( foo ).to.throw( TypeError );
 
@@ -115,7 +123,7 @@ describe( 'flow-append', function tests() {
 		});
 
 		it( 'can be destroyed', function test( done ) {
-			var s = stream();
+			var s = stream( '\n' );
 			s.on( 'close', function onClose() {
 				assert.ok( true );
 				done();
@@ -124,7 +132,7 @@ describe( 'flow-append', function tests() {
 		});
 
 		it( 'can be destroyed more than once', function test( done ) {
-			var s = stream();
+			var s = stream( '\n' );
 			s.on( 'close', function onClose() {
 				assert.ok( true );
 				done();
@@ -134,7 +142,7 @@ describe( 'flow-append', function tests() {
 		});
 
 		it( 'can be destroyed with an error', function test( done ) {
-			var s = stream();
+			var s = stream( '\n' );
 			s.on( 'error', function onError( error ) {
 				if ( error ) {
 					assert.ok( true );
